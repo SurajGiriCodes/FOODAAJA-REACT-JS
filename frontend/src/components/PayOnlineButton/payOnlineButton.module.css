@@ -1,0 +1,16 @@
+.button {
+  color: white;
+  background-color: #007bff;
+  border: none;
+  font-size: 1rem;
+  padding: 0.8rem;
+  outline: none;
+  width: 70%;
+  margin-left: 6rem;
+  margin-top: 20px;
+}
+
+.button:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
