@@ -13,6 +13,8 @@ export const dbconnect = async () => {
     connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 30000,
     });
     await seedUsers();
     await seedFoods();
