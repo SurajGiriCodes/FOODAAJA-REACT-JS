@@ -14,15 +14,15 @@ import { BAD_REQUEST } from "./constants/httpStatus.js";
 import { dbconnect } from "./config/database.config.js";
 dbconnect();
 
-let paymentIdFromCallback;
+// let paymentIdFromCallback;
 
-function setPaymentId(id) {
-  paymentIdFromCallback = id;
-}
+// function setPaymentId(id) {
+//   paymentIdFromCallback = id;
+// }
 
-function getPaymentId() {
-  return paymentIdFromCallback;
-}
+// function getPaymentId() {
+//   return paymentIdFromCallback;
+// }
 
 const app = express();
 app.use(express.json());
@@ -40,10 +40,9 @@ app.use("/api/orders", orderRouter);
 app.get(
   "/track-callback",
   handler(async (req, res) => {
-    const userId = req.query.user_id;
-    const order = await getNewOrderForUser(userId);
+    // const userId = req.query.user_id;
+    // const order = await getNewOrderForUser(userId);
 
-    // Parse the parameters from the URL query string
     const {
       pidx,
       transaction_id,
@@ -59,27 +58,27 @@ app.get(
     console.log("purchase_order_id:", purchase_order_id);
     console.log("purchase_order_name:", purchase_order_name);
 
-    setPaymentId(pidx || transaction_id);
+    // setPaymentId(pidx || transaction_id);
 
-    const paymentId = getPaymentId();
-    console.log("Payment ID before PUT request:", paymentId);
+    // const paymentId = getPaymentId();
+    // console.log("Payment ID before PUT request:", paymentId);
 
-    if (!paymentId) {
-      res.status(BAD_REQUEST).send("Payment ID Not Found!");
-      return;
-    }
+    // if (!paymentId) {
+    //   res.status(BAD_REQUEST).send("Payment ID Not Found!");
+    //   return;
+    // }
 
-    // Check if the order exists and is associated with the user
-    if (!order) {
-      res.status(BAD_REQUEST).send("Order Not Found!");
-      return;
-    }
+    // // Check if the order exists and is associated with the user
+    // if (!order) {
+    //   res.status(BAD_REQUEST).send("Order Not Found!");
+    //   return;
+    // }
 
-    order.paymentId = paymentId;
-    order.status = OrderStatus.PAYED;
-    await order.save();
+    // order.paymentId = paymentId;
+    // order.status = OrderStatus.PAYED;
+    // await order.save();
 
-    res.send(order._id);
+    // res.send(order._id);
     res.redirect(process.env.REDIRECT);
   })
 );
