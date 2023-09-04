@@ -12,7 +12,7 @@ export default function PayOnlineButton({ order, onPayOnlineClick }) {
     }
 
     const payload = {
-      return_url: process.env.REACT_APP_PUBLIC_SUCCESS_URI,
+      return_url: process.env.REACT_APP_PUBLIC_RETURN_URI,
       website_url: process.env.REACT_APP_PUBLIC_WEBSITE_URI,
       amount: parseInt(order.totalPrice) * 100,
       purchase_order_id: order.id,
@@ -26,7 +26,7 @@ export default function PayOnlineButton({ order, onPayOnlineClick }) {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_PUBLIC_KHALTI_URI}`,
+        `https://khalti-api-w3m5.onrender.com/khalti_api`,
         payload
       );
       if (response && response.data && response.data.data) {
