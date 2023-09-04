@@ -12,8 +12,8 @@ export default function PayOnlineButton({ order, onPayOnlineClick }) {
     }
 
     const payload = {
-      return_url: `http://localhost:5000/track-callback`,
-      website_url: "https://localhost:3000",
+      return_url: process.env.REACT_APP_PUBLIC_SUCCESS_URI,
+      website_url: process.env.REACT_APP_PUBLIC_WEBSITE_URI,
       amount: parseInt(order.totalPrice) * 100,
       purchase_order_id: order.id,
       purchase_order_name: `Order #${order.id} - ${order.items.length} items`,
@@ -26,7 +26,7 @@ export default function PayOnlineButton({ order, onPayOnlineClick }) {
 
     try {
       const response = await axios.post(
-        `https://khalti-api-w3m5.onrender.com/khalti_api`,
+        `${process.env.REACT_APP_PUBLIC_KHALTI_URI}`,
         payload
       );
       if (response && response.data && response.data.data) {

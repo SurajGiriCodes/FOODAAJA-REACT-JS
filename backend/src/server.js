@@ -7,21 +7,22 @@ import handler from "express-async-handler";
 import foodRouter from "./routers/food.router.js";
 import userRouter from "./routers/user.router.js";
 import orderRouter from "./routers/order.router.js";
-//import { OrderModel } from "./models/order.model.js";
-//import { OrderStatus } from "./constants/orderStatus.js";
+import { OrderModel } from "./models/order.model.js";
+import { OrderStatus } from "./constants/orderStatus.js";
+import { BAD_REQUEST } from "./constants/httpStatus.js";
 
 import { dbconnect } from "./config/database.config.js";
 dbconnect();
 
-// let paymentIdFromCallback;
+let paymentIdFromCallback;
 
-// function setPaymentId(id) {
-//   paymentIdFromCallback = id;
-// }
+function setPaymentId(id) {
+  paymentIdFromCallback = id;
+}
 
-// function getPaymentId() {
-//   return paymentIdFromCallback;
-// }
+function getPaymentId() {
+  return paymentIdFromCallback;
+}
 
 const app = express();
 app.use(express.json());
@@ -39,8 +40,8 @@ app.use("/api/orders", orderRouter);
 app.get(
   "/track-callback",
   handler(async (req, res) => {
-    // const userId = req.query.user_id;
-    // const order = await getNewOrderForUser(userId);
+    const userId = req.query.user_id;
+    const order = await getNewOrderForUser(userId);
 
     // Parse the parameters from the URL query string
     const {
@@ -58,34 +59,34 @@ app.get(
     console.log("purchase_order_id:", purchase_order_id);
     console.log("purchase_order_name:", purchase_order_name);
 
-    // setPaymentId(pidx || transaction_id);
+    setPaymentId(pidx || transaction_id);
 
-    // const paymentId = getPaymentId();
-    // console.log("Payment ID before PUT request:", paymentId);
+    const paymentId = getPaymentId();
+    console.log("Payment ID before PUT request:", paymentId);
 
-    // if (!paymentId) {
-    //   res.status(BAD_REQUEST).send("Payment ID Not Found!");
-    //   return;
-    // }
+    if (!paymentId) {
+      res.status(BAD_REQUEST).send("Payment ID Not Found!");
+      return;
+    }
 
-    // // Check if the order exists and is associated with the user
-    // if (!order) {
-    //   res.status(BAD_REQUEST).send("Order Not Found!");
-    //   return;
-    // }
+    // Check if the order exists and is associated with the user
+    if (!order) {
+      res.status(BAD_REQUEST).send("Order Not Found!");
+      return;
+    }
 
-    // order.paymentId = paymentId;
-    // order.status = OrderStatus.PAYED;
-    // await order.save();
+    order.paymentId = paymentId;
+    order.status = OrderStatus.PAYED;
+    await order.save();
 
-    // res.send(order._id);
-    res.redirect("http://localhost:3000/track");
+    res.send(order._id);
+    res.redirect(process.env.REDIRECT);
   })
 );
 
 // Assuming that you have defined the getNewOrderForUser function somewhere
-// const getNewOrderForUser = async (userId) =>
-//   await OrderModel.findOne({ user: userId, status: OrderStatus.NEW });
+const getNewOrderForUser = async (userId) =>
+  await OrderModel.findOne({ user: userId, status: OrderStatus.NEW });
 
 const PORT = 5000;
 app.listen(PORT, () => {
