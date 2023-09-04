@@ -11,10 +11,3 @@ export const getNewOrderForCurrentUser = async () => {
   const { data } = await axios.get("/api/orders/newOrderForCurrentUser");
   return data;
 };
-
-// export const pay = async (PaymentId) => {
-//   try {
-//     const { data } = await axios.put("/api/orders/pay", { PaymentId });
-//     return data;
-//   } catch (error) {}
-// };
